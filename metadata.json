@@ -1,0 +1,5 @@
+{
+  "name": "E-SPP",
+  "description": "An electronic school fee payment system application built with Angular and Tailwind CSS, allowing students, officers, and admins to manage payments.",
+  "requestFramePermissions": []
+}

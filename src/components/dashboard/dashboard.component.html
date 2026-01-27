@@ -1,0 +1,431 @@
+<div class="min-h-screen bg-gray-50 font-sans pb-10">
+  <!-- Header -->
+  <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-40 animate-slide-up">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <div class="flex items-center gap-4">
+          <!-- Logo matching login theme -->
+          <div class="w-12 h-12 bg-gradient-to-b from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-200 transform hover:rotate-6 transition-transform duration-300">
+            <i class="fas fa-graduation-cap text-2xl text-white"></i>
+          </div>
+          <div>
+            <h1 class="text-xl font-extrabold text-gray-800 tracking-tight">E-SPP <span class="text-teal-500">Dashboard</span></h1>
+            <p class="text-xs text-gray-500 font-medium">Sistem Pembayaran Terpadu</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-6">
+          <div class="text-right hidden sm:block">
+            <p class="font-bold text-gray-800 text-sm">{{ currentUser()?.name }}</p>
+            <span class="inline-block px-3 py-0.5 rounded-full bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-wider border border-blue-100">
+              {{ currentUser()?.role }}
+            </span>
+          </div>
+          <!-- Logout Button Styled -->
+          <button (click)="requestLogout()" class="w-10 h-10 rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white hover:shadow-lg hover:shadow-red-200 transition-all duration-300 flex items-center justify-center group" title="Keluar Aplikasi">
+            <i class="fas fa-sign-out-alt text-lg group-hover:scale-110 transition-transform"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    @switch (currentUser()?.role) {
+      
+      <!-- 1. DASHBOARD SUPERADMIN -->
+      @case ('Superadmin') {
+        <div class="space-y-8 animate-slide-up delay-100">
+          <!-- System Overview -->
+           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="bg-slate-900 rounded-[2rem] p-6 text-white shadow-xl shadow-slate-200 relative overflow-hidden group">
+                  <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+                      <i class="fas fa-server text-8xl"></i>
+                  </div>
+                  <h3 class="text-slate-400 font-bold text-sm uppercase mb-1">Status Sistem</h3>
+                  <p class="text-3xl font-extrabold mb-4">ONLINE</p>
+                  <div class="flex items-center gap-2 text-xs font-mono bg-slate-800 w-fit px-3 py-1 rounded-full">
+                    <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> v3.0.1 Stable
+                  </div>
+              </div>
+
+              <div class="bg-white rounded-[2rem] p-6 shadow-xl shadow-gray-100 relative overflow-hidden group border border-slate-100">
+                 <div class="absolute top-0 left-0 w-full h-1.5 bg-indigo-500"></div>
+                  <h3 class="text-gray-400 font-bold text-sm uppercase mb-1">Total Pengguna</h3>
+                  <p class="text-3xl font-extrabold text-gray-800 mb-4">{{ allStudents().length + 4 }} <span class="text-sm font-normal text-gray-500">Akun</span></p>
+                  <button class="text-indigo-600 text-sm font-bold hover:underline">Kelola User <i class="fas fa-arrow-right ml-1"></i></button>
+              </div>
+
+              <div class="bg-white rounded-[2rem] p-6 shadow-xl shadow-gray-100 relative overflow-hidden group border border-slate-100">
+                 <div class="absolute top-0 left-0 w-full h-1.5 bg-red-500"></div>
+                  <h3 class="text-gray-400 font-bold text-sm uppercase mb-1">Log Keamanan</h3>
+                  <p class="text-3xl font-extrabold text-gray-800 mb-4">0 <span class="text-sm font-normal text-gray-500">Insiden</span></p>
+                  <div class="text-green-600 text-xs font-bold flex items-center gap-1">
+                    <i class="fas fa-shield-alt"></i> Aman
+                  </div>
+              </div>
+           </div>
+
+           <!-- User Management Table Placeholder -->
+           <div class="bg-white rounded-[2rem] shadow-xl shadow-gray-100 overflow-hidden relative">
+              <div class="absolute top-0 left-0 w-full h-1.5 bg-slate-800 z-10"></div>
+              <div class="p-8 border-b border-gray-100">
+                <div class="flex items-center gap-4">
+                  <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-700">
+                      <i class="fas fa-users-cog text-xl"></i>
+                  </div>
+                  <div>
+                      <h2 class="text-xl font-extrabold text-gray-900">Manajemen Pengguna</h2>
+                      <p class="text-gray-500 text-sm">Hak akses penuh administrator</p>
+                  </div>
+                </div>
+              </div>
+              <div class="p-8 text-center text-gray-400 py-12 bg-slate-50/50">
+                  <i class="fas fa-lock text-4xl mb-3 opacity-20"></i>
+                  <p>Area Konfigurasi Sensitif</p>
+              </div>
+           </div>
+        </div>
+      }
+
+      <!-- 2. DASHBOARD BENDAHARA -->
+      @case ('Bendahara') {
+        <div class="space-y-8 animate-slide-up delay-100">
+           <!-- Input Transaction Card -->
+           <div class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-[2rem] shadow-xl shadow-emerald-100 p-8 text-white relative overflow-hidden">
+               <div class="absolute right-0 bottom-0 opacity-10 transform translate-x-10 translate-y-10">
+                   <i class="fas fa-cash-register text-9xl"></i>
+               </div>
+               <h2 class="text-2xl font-bold mb-2">Input Pembayaran Baru</h2>
+               <p class="text-emerald-100 mb-6 max-w-md">Masukkan NIS siswa untuk memulai proses pencatatan pembayaran SPP atau Daftar Ulang.</p>
+               <div class="flex gap-4 max-w-lg">
+                   <input type="text" placeholder="Masukkan NIS Siswa..." class="flex-1 px-6 py-4 rounded-2xl text-gray-800 font-bold focus:outline-none focus:ring-4 focus:ring-emerald-300/50 shadow-lg placeholder-gray-400">
+                   <button class="bg-white text-emerald-600 px-8 py-4 rounded-2xl font-extrabold hover:bg-emerald-50 transition-colors shadow-lg">
+                       <i class="fas fa-search"></i> Cari
+                   </button>
+               </div>
+           </div>
+
+           <!-- Student Data Table -->
+           <div class="bg-white rounded-[2rem] shadow-xl shadow-gray-100 overflow-hidden relative">
+              <div class="absolute top-0 left-0 w-full h-1.5 bg-emerald-500 z-10"></div>
+              <div class="p-8 border-b border-gray-100 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                   <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 border border-emerald-100">
+                      <i class="fas fa-database text-xl"></i>
+                   </div>
+                   <div>
+                      <h2 class="text-xl font-extrabold text-gray-900">Data Tagihan Siswa</h2>
+                      <p class="text-gray-500 text-sm">Database Keuangan</p>
+                   </div>
+                </div>
+                <button class="bg-gray-100 text-gray-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-gray-200 transition">
+                    <i class="fas fa-print mr-2"></i> Cetak Laporan
+                </button>
+              </div>
+              
+              <div class="overflow-x-auto p-2">
+                <table class="w-full text-sm text-left">
+                  <thead class="text-xs text-gray-500 uppercase bg-gray-50/50">
+                    <tr>
+                      <th scope="col" class="px-6 py-4 rounded-l-xl font-bold">Siswa</th>
+                      <th scope="col" class="px-6 py-4 font-bold">Kelas</th>
+                      <th scope="col" class="px-6 py-4 font-bold">Tagihan Terakhir</th>
+                      <th scope="col" class="px-6 py-4 rounded-r-xl font-bold text-center">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-50">
+                    @for (student of allStudents(); track student.id) {
+                      @let lastPayment = student.paymentHistory[student.paymentHistory.length - 1];
+                      <tr class="hover:bg-emerald-50/30 transition-colors">
+                        <td class="px-6 py-5">
+                            <div class="font-bold text-gray-900 text-base">{{ student.name }}</div>
+                            <div class="text-xs font-mono text-gray-500">{{ student.id }}</div>
+                        </td>
+                        <td class="px-6 py-5">
+                            <span class="px-3 py-1 bg-gray-100 rounded-lg text-gray-600 font-medium text-xs border border-gray-200">{{ student.kelas }}</span>
+                        </td>
+                        <td class="px-6 py-5 text-gray-500">
+                            {{ lastPayment.bulan }} {{ lastPayment.tahun }}
+                        </td>
+                        <td class="px-6 py-5 text-center">
+                            @if (lastPayment.status === 'Lunas') {
+                                <span class="inline-flex px-3 py-1 rounded-full text-xs font-bold bg-green-50 text-green-600 border border-green-100">Lunas</span>
+                            } @else {
+                                <span class="inline-flex px-3 py-1 rounded-full text-xs font-bold bg-red-50 text-red-500 border border-red-100">Tunggakan</span>
+                            }
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+           </div>
+        </div>
+      }
+
+      <!-- 3. DASHBOARD KEPALA SEKOLAH -->
+      @case ('KepalaSekolah') {
+        <div class="space-y-8 animate-slide-up delay-100">
+          <div class="flex items-center gap-4 mb-4">
+              <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
+                  <i class="fas fa-chart-pie text-3xl text-purple-600"></i>
+              </div>
+              <div>
+                  <h2 class="text-2xl font-extrabold text-gray-900">Executive Summary</h2>
+                  <p class="text-gray-500">Laporan Eksekutif Keuangan Sekolah</p>
+              </div>
+          </div>
+
+          <!-- Financial Stats Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+             <!-- Total Income -->
+             <div class="bg-white rounded-[2rem] p-6 shadow-xl shadow-gray-100 border border-purple-50 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-purple-50 rounded-full -mr-12 -mt-12 opacity-50"></div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Total Pemasukan</p>
+                <h3 class="text-2xl font-extrabold text-purple-700 font-mono">
+                    Rp {{ financialStats().totalCollected.toLocaleString('id-ID') }}
+                </h3>
+                <div class="mt-4 text-xs font-medium text-green-600 flex items-center gap-1">
+                    <i class="fas fa-arrow-up"></i> +12% dari bulan lalu
+                </div>
+             </div>
+
+             <!-- Total Arrears -->
+             <div class="bg-white rounded-[2rem] p-6 shadow-xl shadow-gray-100 border border-red-50 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-full -mr-12 -mt-12 opacity-50"></div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Total Tunggakan</p>
+                <h3 class="text-2xl font-extrabold text-red-600 font-mono">
+                    Rp {{ financialStats().totalArrears.toLocaleString('id-ID') }}
+                </h3>
+                <div class="mt-4 text-xs font-medium text-red-500 flex items-center gap-1">
+                    <i class="fas fa-exclamation-circle"></i> Perlu tindak lanjut
+                </div>
+             </div>
+
+             <!-- Transactions -->
+             <div class="bg-white rounded-[2rem] p-6 shadow-xl shadow-gray-100 border border-blue-50 relative overflow-hidden">
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Transaksi Lunas</p>
+                <h3 class="text-2xl font-extrabold text-blue-700">
+                    {{ financialStats().transactionCount }}
+                </h3>
+                <p class="text-xs text-gray-400 mt-1">Item pembayaran</p>
+             </div>
+
+             <!-- Students -->
+             <div class="bg-white rounded-[2rem] p-6 shadow-xl shadow-gray-100 border border-gray-50 relative overflow-hidden">
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Total Siswa</p>
+                <h3 class="text-2xl font-extrabold text-gray-800">
+                    {{ financialStats().studentCount }}
+                </h3>
+                <p class="text-xs text-gray-400 mt-1">Siswa Aktif</p>
+             </div>
+          </div>
+
+          <!-- Report Table Summary -->
+          <div class="bg-white rounded-[2rem] shadow-xl shadow-gray-100 overflow-hidden relative">
+             <div class="absolute top-0 left-0 w-full h-1.5 bg-purple-500 z-10"></div>
+             <div class="p-8 border-b border-gray-100">
+                <h3 class="font-extrabold text-gray-900">Rincian Per Kelas</h3>
+             </div>
+             <div class="p-8 text-center">
+                 <!-- Placeholder for a more detailed chart or table -->
+                 <div class="flex flex-col items-center justify-center text-gray-400 py-6">
+                     <i class="fas fa-chart-bar text-5xl mb-4 text-purple-100"></i>
+                     <p class="text-sm">Grafik Statistik Pembayaran Ditampilkan Di Sini</p>
+                 </div>
+             </div>
+          </div>
+        </div>
+      }
+
+      <!-- 4. DASHBOARD WAKIL SARANA -->
+      @case ('WakilSarana') {
+        <div class="space-y-8 animate-slide-up delay-100">
+           <!-- Budget Allocation Card -->
+           <div class="bg-gradient-to-br from-orange-400 to-amber-500 rounded-[2rem] shadow-xl shadow-orange-100 p-8 text-white relative overflow-hidden">
+                <div class="absolute right-0 top-0 p-6 opacity-20">
+                    <i class="fas fa-tools text-8xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold mb-1">Anggaran Sarana & Prasarana</h2>
+                <p class="text-orange-100 text-sm mb-6">Alokasi dana dari SPP untuk pemeliharaan fasilitas.</p>
+                
+                <div class="bg-white/20 backdrop-blur-md rounded-xl p-4 mb-4 border border-white/30">
+                    <p class="text-xs font-bold uppercase tracking-wider mb-1 text-orange-50">Dana Tersedia (Estimasi 20%)</p>
+                    <p class="text-3xl font-extrabold font-mono">Rp 45.000.000</p>
+                </div>
+                
+                <button class="bg-white text-orange-600 px-6 py-3 rounded-xl font-bold text-sm shadow-md hover:bg-orange-50 transition">
+                    <i class="fas fa-file-invoice mr-2"></i> Ajukan Perbaikan
+                </button>
+           </div>
+
+           <!-- Maintenance Request List Placeholder -->
+           <div class="bg-white rounded-[2rem] shadow-xl shadow-gray-100 overflow-hidden relative">
+               <div class="absolute top-0 left-0 w-full h-1.5 bg-orange-400 z-10"></div>
+               <div class="p-8 border-b border-gray-100">
+                  <div class="flex items-center gap-4">
+                     <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-600 border border-orange-100">
+                        <i class="fas fa-list-ul text-xl"></i>
+                     </div>
+                     <div>
+                        <h2 class="text-xl font-extrabold text-gray-900">Daftar Pengajuan Perbaikan</h2>
+                        <p class="text-gray-500 text-sm">Status maintenance fasilitas sekolah</p>
+                     </div>
+                  </div>
+               </div>
+               
+               <div class="p-6 grid gap-4">
+                   <!-- Dummy Item -->
+                   <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                       <div class="flex items-center gap-4">
+                           <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-500">
+                               <i class="fas fa-exclamation-triangle"></i>
+                           </div>
+                           <div>
+                               <h4 class="font-bold text-gray-800">Perbaikan AC Lab Komputer</h4>
+                               <p class="text-xs text-gray-500">Diajukan: 2 Hari yang lalu</p>
+                           </div>
+                       </div>
+                       <span class="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-bold rounded-full">Proses</span>
+                   </div>
+                   
+                   <!-- Dummy Item -->
+                   <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                       <div class="flex items-center gap-4">
+                           <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-500">
+                               <i class="fas fa-paint-roller"></i>
+                           </div>
+                           <div>
+                               <h4 class="font-bold text-gray-800">Pengecatan Kelas X-1</h4>
+                               <p class="text-xs text-gray-500">Diajukan: 1 Minggu yang lalu</p>
+                           </div>
+                       </div>
+                       <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">Selesai</span>
+                   </div>
+               </div>
+           </div>
+        </div>
+      }
+
+      <!-- 5. DASHBOARD SISWA (Existing) -->
+      @case ('Siswa') {
+        @if (studentData(); as student) {
+          <div class="space-y-8 animate-slide-up delay-100">
+            <!-- Student Info Card -->
+            <div class="bg-white rounded-[2rem] shadow-xl shadow-gray-100 p-8 relative overflow-hidden group hover:shadow-2xl hover:shadow-blue-50 transition-all duration-500">
+              <!-- Teal Accent Top -->
+              <div class="absolute top-0 left-0 w-full h-1.5 bg-teal-400"></div>
+              
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center text-teal-500 border border-teal-100">
+                        <i class="fas fa-id-card text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-gray-900">Kartu Pelajar Digital</h2>
+                        <p class="text-gray-500 text-sm">Informasi akademik siswa</p>
+                    </div>
+                </div>
+                <div class="px-5 py-2 bg-blue-50 rounded-xl border border-blue-100 text-blue-700 font-mono text-sm font-bold flex items-center gap-2">
+                    <i class="fas fa-check-circle text-blue-500"></i> {{ student.statusSiswa }}
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Data Items -->
+                <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100 hover:border-blue-200 hover:bg-blue-50/30 transition-colors group/item">
+                  <p class="text-xs uppercase tracking-widest text-gray-400 font-bold mb-2 group-hover/item:text-blue-400">NIS / NISN</p>
+                  <p class="font-bold text-gray-800 text-lg font-mono">{{ student.id }} / <br>{{ student.nisn }}</p>
+                </div>
+                <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100 hover:border-blue-200 hover:bg-blue-50/30 transition-colors group/item">
+                  <p class="text-xs uppercase tracking-widest text-gray-400 font-bold mb-2 group-hover/item:text-blue-400">Nama Lengkap</p>
+                  <p class="font-bold text-gray-800 text-lg capitalize">{{ student.name }}</p>
+                </div>
+                <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100 hover:border-blue-200 hover:bg-blue-50/30 transition-colors group/item">
+                  <p class="text-xs uppercase tracking-widest text-gray-400 font-bold mb-2 group-hover/item:text-blue-400">Kelas Saat Ini</p>
+                  <p class="font-bold text-gray-800 text-lg">{{ student.kelas }}</p>
+                </div>
+                 <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100 hover:border-blue-200 hover:bg-blue-50/30 transition-colors group/item">
+                  <p class="text-xs uppercase tracking-widest text-gray-400 font-bold mb-2 group-hover/item:text-blue-400">No. WhatsApp</p>
+                  <p class="font-bold text-gray-800 text-lg font-mono">{{ student.noWa }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Payment History Table Card -->
+            <div class="bg-white rounded-[2rem] shadow-xl shadow-gray-100 overflow-hidden relative">
+               <!-- Teal Accent Top -->
+               <div class="absolute top-0 left-0 w-full h-1.5 bg-teal-400 z-10"></div>
+               
+              <div class="p-8 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 border border-blue-100">
+                        <i class="fas fa-wallet text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-extrabold text-gray-900">Riwayat Transaksi</h2>
+                        <p class="text-gray-500 text-sm">Laporan pembayaran SPP & DU</p>
+                    </div>
+                </div>
+                 <div class="bg-teal-50 px-4 py-2 rounded-xl text-teal-700 font-bold text-xs border border-teal-100">
+                  SPP Bulanan: Rp {{ student.nominalSpp.toLocaleString('id-ID') }}
+                </div>
+              </div>
+              
+              <div class="overflow-x-auto p-2">
+                <table class="w-full text-sm text-left">
+                  <thead class="text-xs text-gray-500 uppercase bg-gray-50/50">
+                    <tr>
+                      <th scope="col" class="px-6 py-4 rounded-l-xl font-bold tracking-wider">Periode</th>
+                      <th scope="col" class="px-6 py-4 font-bold tracking-wider">Tagihan</th>
+                      <th scope="col" class="px-6 py-4 font-bold tracking-wider">Tanggal Bayar</th>
+                      <th scope="col" class="px-6 py-4 rounded-r-xl font-bold tracking-wider text-center">Status Pembayaran</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-50">
+                    @for (payment of student.paymentHistory; track payment.id) {
+                      <tr class="hover:bg-blue-50/30 transition-colors group">
+                        <td class="px-6 py-5">
+                            <div class="font-bold text-gray-800">{{ payment.bulan }}</div>
+                            <div class="text-xs text-gray-400">{{ payment.tahun }}</div>
+                        </td>
+                        <td class="px-6 py-5 font-mono font-medium text-gray-600">
+                            Rp {{ payment.jumlah.toLocaleString('id-ID') }}
+                        </td>
+                        <td class="px-6 py-5 text-gray-500">
+                            {{ payment.tanggalBayar || '-' }}
+                        </td>
+                        <td class="px-6 py-5 text-center">
+                            @if (payment.status === 'Lunas') {
+                                <span class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-green-50 text-green-600 border border-green-100 shadow-sm shadow-green-50">
+                                    <i class="fas fa-check-circle"></i> LUNAS
+                                </span>
+                            } @else {
+                                <span class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-red-50 text-red-500 border border-red-100 shadow-sm shadow-red-50">
+                                    <i class="fas fa-clock"></i> BELUM LUNAS
+                                </span>
+                            }
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        }
+      }
+    }
+  </main>
+</div>
+
+@if (showLogoutConfirmation()) {
+  <app-confirmation-dialog
+    title="Konfirmasi Keluar"
+    message="Anda akan mengakhiri sesi ini."
+    (confirm)="confirmLogout()"
+    (cancel)="cancelLogout()">
+  </app-confirmation-dialog>
+}
