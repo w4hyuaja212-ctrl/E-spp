@@ -19,7 +19,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   isLoading = signal(false);
   showWelcome = signal(false);
   loginError = signal<string | null>(null);
+  
+  // Time & Date Signals
   realtimeClock = signal('');
+  currentDate = signal('');
+  greeting = signal('');
   
   private clockInterval: any;
 
@@ -42,10 +46,23 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   updateClock(): void {
     const now = new Date();
+    
+    // Time
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const seconds = String(now.getSeconds()).padStart(2, '0');
-    this.realtimeClock.set(`${hours}.${minutes}.${seconds} WIB`);
+    this.realtimeClock.set(`${hours}:${minutes}:${seconds}`);
+
+    // Date (Indonesian Format)
+    const dateOptions: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    this.currentDate.set(now.toLocaleDateString('id-ID', dateOptions));
+
+    // Greeting
+    const hourInt = now.getHours();
+    if (hourInt < 11) this.greeting.set('Selamat Pagi');
+    else if (hourInt < 15) this.greeting.set('Selamat Siang');
+    else if (hourInt < 18) this.greeting.set('Selamat Sore');
+    else this.greeting.set('Selamat Malam');
   }
 
   async handleLogin(): Promise<void> {
