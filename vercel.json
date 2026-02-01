@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "installCommand": "echo 'Skipping installation'",
+  "buildCommand": "echo 'Skipping build'",
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/.*",
+      "dest": "/index.html"
+    }
+  ]
+}
